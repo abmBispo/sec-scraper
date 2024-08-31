@@ -1,0 +1,33 @@
+version: "3"
+services:
+  khronos:
+    profiles: [app]
+    build:
+      context: ./khronos
+      dockerfile: Dockerfile
+      target: builder
+    ports:
+      - 4000:4000
+    volumes:
+      - ./khronos:/app/
+    networks:
+      - khronos
+  postgres:
+    restart: always
+    profiles: [database]
+    image: postgres:16.3
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - PGUSER=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data/
+    networks:
+      - khronos
+
+volumes:
+  postgres:
+
+networks:
+  khronos:
